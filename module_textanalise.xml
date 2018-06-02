@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_textanalise" default="compile.module.textanalise">
+  <dirname property="module.textanalise.basedir" file="${ant.file.module_textanalise}"/>
+  
+  <property name="module.jdk.home.textanalise" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.textanalise" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.textanalise" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.textanalise" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="textanalise.output.dir" value="${module.textanalise.basedir}/out/production/TextAnalise"/>
+  <property name="textanalise.testoutput.dir" value="${module.textanalise.basedir}/out/test/TextAnalise"/>
+  
+  <path id="textanalise.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="textanalise.module.production.classpath">
+    <path refid="${module.jdk.classpath.textanalise}"/>
+    <path refid="library.org.jfree:fxgraphics2d:1.6.classpath"/>
+    <path refid="library.jfree:jfreechart:1.0.13.classpath"/>
+  </path>
+  
+  <path id="textanalise.runtime.production.module.classpath">
+    <pathelement location="${textanalise.output.dir}"/>
+    <path refid="library.org.jfree:fxgraphics2d:1.6.classpath"/>
+    <path refid="library.jfree:jfreechart:1.0.13.classpath"/>
+  </path>
+  
+  <path id="textanalise.module.classpath">
+    <pathelement location="${textanalise.output.dir}"/>
+    <path refid="${module.jdk.classpath.textanalise}"/>
+    <path refid="library.org.jfree:fxgraphics2d:1.6.classpath"/>
+    <path refid="library.jfree:jfreechart:1.0.13.classpath"/>
+  </path>
+  
+  <path id="textanalise.runtime.module.classpath">
+    <pathelement location="${textanalise.testoutput.dir}"/>
+    <pathelement location="${textanalise.output.dir}"/>
+    <path refid="library.org.jfree:fxgraphics2d:1.6.classpath"/>
+    <path refid="library.jfree:jfreechart:1.0.13.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.textanalise">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.textanalise">
+    <patternset refid="excluded.from.module.textanalise"/>
+  </patternset>
+  
+  <path id="textanalise.module.sourcepath">
+    <dirset dir="${module.textanalise.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.textanalise" depends="compile.module.textanalise.production,compile.module.textanalise.tests" description="Compile module TextAnalise"/>
+  
+  <target name="compile.module.textanalise.production" depends="register.custom.compilers" description="Compile module TextAnalise; production classes">
+    <mkdir dir="${textanalise.output.dir}"/>
+    <javac2 destdir="${textanalise.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.textanalise}/javac">
+      <compilerarg line="${compiler.args.textanalise}"/>
+      <bootclasspath refid="textanalise.module.bootclasspath"/>
+      <classpath refid="textanalise.module.production.classpath"/>
+      <src refid="textanalise.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.textanalise"/>
+    </javac2>
+    
+    <copy todir="${textanalise.output.dir}">
+      <fileset dir="${module.textanalise.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.textanalise.tests" depends="register.custom.compilers,compile.module.textanalise.production" description="compile module TextAnalise; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.textanalise" description="cleanup module">
+    <delete dir="${textanalise.output.dir}"/>
+    <delete dir="${textanalise.testoutput.dir}"/>
+  </target>
+</project>
